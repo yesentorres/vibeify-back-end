@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, redirect, request, session, g
-from FLASK-CORS import CORS, cross_origin
+from flask-cors import CORS, cross_origin
 import requests
 import startup
 
