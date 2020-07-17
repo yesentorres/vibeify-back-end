@@ -8,8 +8,8 @@ CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 
 CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 
-PORT = "3000"
-CALLBACK_URL = "http://localhost"
+#PORT = "3000"
+CALLBACK_URL = "https://vibeify.herokuapp.com"
 
 SCOPE = "user-read-email"
 
@@ -18,7 +18,7 @@ TOKEN_DATA = []
 
 
 def getUser():
-    return getAuth(CLIENT_ID, "{}:{}/callback".format(CALLBACK_URL, PORT), SCOPE)
+    return getAuth(CLIENT_ID, "{}:{}/callback".format(CALLBACK_URL), SCOPE)
 
 def getUserToken(code):
     global TOKEN_DATA
