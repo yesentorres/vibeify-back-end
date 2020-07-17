@@ -1,0 +1,32 @@
+from flask_spotify_auth import getAuth, refreshAuth, getToken
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+
+CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
+
+PORT = "3000"
+CALLBACK_URL = "http://localhost"
+
+SCOPE = "user-read-email"
+
+#token_data will hold authentication header with access code, the allowed scopes, and the refresh countdown 
+TOKEN_DATA = []
+
+
+def getUser():
+    return getAuth(CLIENT_ID, "{}:{}/callback".format(CALLBACK_URL, PORT), SCOPE)
+
+def getUserToken(code):
+    global TOKEN_DATA
+    TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, "{}:{}/callback".format(CALLBACK_URL, PORT))
+ 
+def refreshToken(time):
+    time.sleep(time)
+    TOKEN_DATA = refreshAuth()
+
+def getAccessToken():
+    return TOKEN_DATA
