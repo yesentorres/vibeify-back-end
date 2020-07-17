@@ -1,10 +1,10 @@
 from flask import Flask, jsonify, redirect, request, session, g
-from flask_cors import CORS, cross_origin
+from flask_cors import cross_origin
 import requests
 import startup
 
 app = Flask(__name__)
-#CORS(app)
+CORS(app)
 
 @app.route('/')
 def index():
