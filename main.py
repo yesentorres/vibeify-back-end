@@ -4,7 +4,7 @@ import requests
 import startup
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
 
 @app.route('/')
 def index():
@@ -15,13 +15,15 @@ def index():
 @cross_origin()
 def get_access(): 
   result = request.json
-  auth_code = result['params']['auth_code']['code']
-  startup.getUserToken(auth_code)
+  global AUTH_CODE
+  AUTH_CODE = result['params']['auth_code']['code']
+  
   return 'got it'
 
 @app.route('/user-info', methods=['GET'])
 @cross_origin()
 def user_details():
+  startup.getUserToken(AUTH_CODE)
   access_code = startup.TOKEN_DATA[0]
   auth_head = {"Authorization": "Bearer {}".format(access_code)} 
   # get user info 
