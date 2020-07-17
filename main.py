@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, redirect, request, session, g
-from flask_cors import cross_origin
+from flask_cors import CORS, cross_origin
 import requests
 import startup
 
@@ -23,7 +23,6 @@ def get_access():
 @app.route('/user-info', methods=['GET'])
 @cross_origin()
 def user_details():
-  startup.getUserToken(AUTH_CODE)
   access_code = startup.TOKEN_DATA[0]
   auth_head = {"Authorization": "Bearer {}".format(access_code)} 
   # get user info 
