@@ -2,9 +2,14 @@ from flask import Flask, jsonify, redirect, request, session, g
 from flask_cors import CORS, cross_origin
 import requests
 import startup
+import json 
 
 app = Flask(__name__)
 CORS(app)
+
+def helper():
+  return 'dont mind me'
+
 
 @app.route('/')
 def index():
@@ -27,7 +32,7 @@ def user_details():
   auth_head = {"Authorization": "Bearer {}".format(keys[0])} 
   # get user info 
   user_info = requests.get('https://api.spotify.com/v1/me', headers=auth_head)
-  return user_info.json()['display_name']
+  return user_info.json()
 
 @app.route('/get-genres', methods=['GET'])
 @cross_origin()
@@ -58,6 +63,44 @@ def get_recommendation():
 
   # get recommendations
   recommendations = requests.get('https://api.spotify.com/v1/recommendations', headers=auth_head, params=preferences)
+  
+  track_list = recommendations.json()['tracks']
 
+  # make playlist
+  # get user id 
+  user = user_details().json
+  user_id = user['id']
 
-  return recommendations.json()
+  # formulate headers
+  playlist_headers = {
+    "Authorization": "Bearer {}".format(keys[0]),
+    "Content-Type": "application/json"
+  }
+
+  playlist_body = "{\"name\":\"Playlist by Vibeify\", \"description\":\"A playlist generated using Vibeify. Create a playlist to match your vibe at vibeify.herokuapp.com.\"}"
+  
+  # make playlist 
+  playlist = requests.post('https://api.spotify.com/v1/users/{}/playlists'.format(user_id), headers=playlist_headers, data=playlist_body)
+
+  playlist_data = json.loads(playlist.text)
+
+  playlist_id = playlist_data['id']
+
+  #format 
+  uris = ""
+
+  for track in track_list:
+    uris = uris + (track['uri']) + ','
+  
+  uris = uris[:-1]
+
+  # params_hash = {
+  #   "uris": uris, 
+  # }
+
+  # add to playlist 
+  populate_playlist = requests.post('https://api.spotify.com/v1/playlists/{}/tracks?uris={}'.format(playlist_id, uris), headers=playlist_headers)
+
+  breakpoint()
+  
+  return playlist.json()['external_urls']['spotify']

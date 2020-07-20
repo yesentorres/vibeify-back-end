@@ -11,7 +11,7 @@ CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 CALLBACK_URL = 'http://localhost:3000'
 #CALLBACK_URL = "https://vibeify.herokuapp.com"
 
-SCOPE = "user-read-email"
+SCOPE = "user-read-email playlist-modify-public playlist-modify-private"
 
 #token_data will hold authentication header with access code, the allowed scopes, and the refresh countdown 
 TOKEN_DATA = []
