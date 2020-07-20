@@ -94,13 +94,6 @@ def get_recommendation():
   
   uris = uris[:-1]
 
-  # params_hash = {
-  #   "uris": uris, 
-  # }
-
-  # add to playlist 
   populate_playlist = requests.post('https://api.spotify.com/v1/playlists/{}/tracks?uris={}'.format(playlist_id, uris), headers=playlist_headers)
-
-  breakpoint()
   
   return playlist.json()['external_urls']['spotify']
