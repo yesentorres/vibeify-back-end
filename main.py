@@ -15,34 +15,49 @@ def index():
 @cross_origin()
 def get_access(): 
   result = request.json
-  global AUTH_CODE
-  AUTH_CODE = result['params']['auth_code']['code']
-  
-  return 'got it'
+  auth_code = result['params']['auth_code']['code']
+  startup.getUserToken(auth_code)
+  return "success"
 
 @app.route('/user-info', methods=['GET'])
 @cross_origin()
 def user_details():
-  startup.getUserToken(AUTH_CODE)
-  access_code = startup.TOKEN_DATA[0]
-  auth_head = {"Authorization": "Bearer {}".format(access_code)} 
+  # breakpoint()
+  keys = startup.TOKEN_DATA
+  auth_head = {"Authorization": "Bearer {}".format(keys[0])} 
   # get user info 
   user_info = requests.get('https://api.spotify.com/v1/me', headers=auth_head)
   return user_info.json()['display_name']
 
-# @app.route('/recommendation-generator', methods=['POST'])
-# @cross_origin()
-# def get_recommendation():
-#   # parse response
-#   result = request.json
+@app.route('/get-genres', methods=['GET'])
+@cross_origin()
+def genre_seeds():
+  keys = startup.TOKEN_DATA
+  auth_head = {"Authorization": "Bearer {}".format(keys[0])} 
+  # get genre seeds 
+  genre_seeds = requests.get('https://api.spotify.com/v1/recommendations/available-genre-seeds', headers=auth_head)
+  return genre_seeds.json()
 
-#   # set up preference params
-#   preferences = {
-    
-#   }
-#   # set up authorization header 
-#   access_code = startup.TOKEN_DATA[0]
-#   auth_head = {"Authorization": "Bearer {}".format(access_code)} 
+@app.route('/recommendation-generator', methods=['POST'])
+@cross_origin()
+def get_recommendation():
+  # parse user preferences 
+  result = request.json
+  genre = result['params']['genre_inspiration']
+  # format
+  seed_genres = []
+  seed_genres.append(genre)
 
-#   # get recommendations
-#   recommendation = requests.get('https://api.spotify.com/v1/recommendations?', headers=auth_head, params=preferences) 
+  preferences = {
+    'seed_genres' : seed_genres,
+    'limit' : '5'
+  }
+
+  keys = startup.TOKEN_DATA
+  auth_head = {"Authorization": "Bearer {}".format(keys[0])} 
+
+  # get recommendations
+  recommendations = requests.get('https://api.spotify.com/v1/recommendations', headers=auth_head, params=preferences)
+
+
+  return recommendations.json()

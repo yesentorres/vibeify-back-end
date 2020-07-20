@@ -8,8 +8,8 @@ CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 
 CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 
-#PORT = "3000"
-CALLBACK_URL = "https://vibeify.herokuapp.com"
+CALLBACK_URL = 'http://localhost:3000'
+#CALLBACK_URL = "https://vibeify.herokuapp.com"
 
 SCOPE = "user-read-email"
 
