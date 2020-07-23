@@ -83,7 +83,7 @@ def get_recommendation():
     "Content-Type": "application/json"
   }
 
-  playlist_body = "{\"name\":\"Playlist by Vibeify\", \"description\":\"A playlist generated using Vibeify. Create a playlist to match your vibe at vibeify.herokuapp.com.\"}"
+  playlist_body = "{\"name\":\"Playlist by Vibeify\", \"description\":\"A playlist generated using Vibeify. Create a playlist to match your vibe at https://vibeify.herokuapp.com.\"}"
   
   # make playlist 
   playlist = requests.post('https://api.spotify.com/v1/users/{}/playlists'.format(user_id), headers=playlist_headers, data=playlist_body)
