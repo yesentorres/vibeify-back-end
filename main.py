@@ -7,9 +7,6 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-def helper():
-  return 'dont mind me'
-
 
 @app.route('/')
 def index():
@@ -27,7 +24,6 @@ def get_access():
 @app.route('/user-info', methods=['GET'])
 @cross_origin()
 def user_details():
-  # breakpoint()
   keys = startup.TOKEN_DATA
   auth_head = {"Authorization": "Bearer {}".format(keys[0])} 
   # get user info 
@@ -49,13 +45,23 @@ def get_recommendation():
   # parse user preferences 
   result = request.json
   genre = result['params']['genre_inspiration']
+  danceability = result['params']['danceability']
+  energy = result['params']['energy']
+  valence = result['params']['valence']
+  popularity = result['params']['popularity']
+
   # format
   seed_genres = []
   seed_genres.append(genre)
 
   preferences = {
     'seed_genres' : seed_genres,
-    'limit' : '5'
+    'limit' : '10',
+    'market': 'US',
+    'target_danceability': danceability,
+    'target_energy': energy,
+    'target_valence': valence,
+    'target_popularity': popularity
   }
 
   keys = startup.TOKEN_DATA
@@ -63,7 +69,7 @@ def get_recommendation():
 
   # get recommendations
   recommendations = requests.get('https://api.spotify.com/v1/recommendations', headers=auth_head, params=preferences)
-  
+
   track_list = recommendations.json()['tracks']
 
   # make playlist
